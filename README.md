@@ -12,9 +12,9 @@
 
 ## **Инструменты / дополнительные материалы, которые пригодятся для выполнения задания**
 
-1. Описание RBAC.
-2. Пользователи и авторизация RBAC в Kubernetes.
-3. RBAC with Kubernetes in Minikube.
+1. [Описание](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) RBAC. 
+2. [Пользователи и авторизация RBAC в Kubernetes](https://habr.com/ru/company/flant/blog/470503/)
+3. [RBAC with Kubernetes in Minikube](https://medium.com/@HoussemDellai/rbac-with-kubernetes-in-minikube-4deed658ea7b)
 
 ## **Задание 1. Создайте конфигурацию для подключения пользователя**
 
@@ -31,7 +31,8 @@
 3. Репозиторий должен содержать тексты манифестов или ссылки на них в файле README.md.
 
 
-# ** Решение **
+
+# **Решение**
 
 - Создаю namespace netology-rbak для этого задания: 
 
@@ -85,6 +86,30 @@ microk8s kubectl config use-context user1-context
 - Описание pod:
 
 - ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20144519.png)
+
+
+- Ссылки на манифесты, ключ и сертификат:
+
+[log-reader-role.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/log-reader-role.yaml)
+
+[log-reader-binding.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/log-reader-binding.yaml)
+
+[user1.crt](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/user1.crt)
+
+[user1.csr](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/user1.csr)
+
+[user1.key](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/user1.key)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
