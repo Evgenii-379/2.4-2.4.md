@@ -38,67 +38,76 @@
 
 - ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20132850.png)
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20140944.png)
 
 
 1. Создание и подписание SSL-сертификата для подключения к кластеру:
 
 ```
-openssl x509 -req -in user1.csr \
-    -CA /var/snap/microk8s/current/certs/ca.crt \
-    -CAkey /var/snap/microk8s/current/certs/ca.key \
-    -CAcreateserial -out user1.crt -days 30
+openssl genrsa -out user-key.pem 2048                                                                   # сгенерировать ключ пользователя
+
+openssl req -new -key user-key.pem -out user.csr -subj "/CN=user1/O=netology"                           # Создать запрос на сертификат
+
+openssl x509 -req -in user.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out user.crt -days 30          #  Подписать запрос корневым CA Kubernetes (MicroK8s)
+
 ```
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20140808.png)
+
 
 2. Настройка kubectl для user1 в MicroK8s, добавляем пользователя в kubectl-контекст:
 
 ```
-microk8s kubectl config set-credentials user1 \
-    --client-certificate=user1.crt --client-key=user1.key
 
-Создаю: контекст для пользователя:
+kubectl config set-credentials user1 --client-certificate=user.crt --client-key=user-key.pem                        # Добавляю пользователя в kubeconfig
 
-microk8s kubectl config set-context user1-context \
-    --cluster=microk8s-cluster --user=user1 --namespace=netology-rbak
+kubectl config set-context user1-context --cluster=microk8s-cluster --namespace=netology-rbac --user=user1          # Добавляем контекст для пользователя
 
-Переключаюсь на контекст user1:
-
-microk8s kubectl config use-context user1-context
+kubectl config use-context user1-context                                                                            # Переключаемся на новый контекст
 
 ```
+ 
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20141513.png)
+- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-29%20114946.png)
+
 
 3. Создаю Role и RoleBinding для доступа к логам и описанию подов и запускаю:
+
+- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-29%20134214.png)
 
 - ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20142402.png)
 
 4. Создаю pod test-pod в namespace netology-rbak для тестирования, переключаюсь на пользователя user1 и проверяю, может ли user1 читать логи и описания подов: : 
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20144101.png)
+- Чтение логов pod и описание pod:
 
-- Чтение логов pod: 
+- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-29%20132201.png)
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20144454.png)
+- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-29%20132307.png)
 
-- Описание pod:
+- Проверка доступных прав у пользователя : 
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20144519.png)
+- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-29%20133411.png)
 
 
 - Ссылки на манифесты, ключ и сертификат:
 
-[log-reader-role.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/log-reader-role.yaml)
+[nginx-test.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/nginx-test.yaml)
 
-[log-reader-binding.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/log-reader-binding.yaml)
+[pod-reader-binding.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/pod-reader-binding.yaml)
 
-[user1.crt](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/user1.crt)
+[pod-reader-role.yaml](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/config.yaml/pod-reader-role.yaml)
 
-[user1.csr](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/user1.csr)
+[ca.crt](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/certs/ca.crt)
 
-[user1.key](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/user1.key)
+[user-key.pem](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/certs/user-key.pem)
+
+[user.crt](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/certs/user.crt)
+
+
+
+
+
+
+
 
 
 
