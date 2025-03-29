@@ -59,9 +59,9 @@ openssl x509 -req -in user.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out use
 
 kubectl config set-credentials user1 --client-certificate=user.crt --client-key=user-key.pem                        # Добавляю пользователя в kubeconfig
 
-kubectl config set-context user1-context --cluster=microk8s-cluster --namespace=netology-rbac --user=user1          # Добавляем контекст для пользователя
+kubectl config set-context user1-context --cluster=microk8s-cluster --namespace=netology-rbac --user=user1          # Добавляю контекст для пользователя
 
-kubectl config use-context user1-context                                                                            # Переключаемся на новый контекст
+kubectl config use-context user1-context                                                                            # Переключаюсь на новый контекст
 
 ```
  
@@ -73,7 +73,6 @@ kubectl config use-context user1-context                                        
 
 - ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-29%20134214.png)
 
-- ![scrin](https://github.com/Evgenii-379/2.4-2.4.md/blob/main/Снимок%20экрана%202025-03-27%20142402.png)
 
 4. Создаю pod test-pod в namespace netology-rbak для тестирования, переключаюсь на пользователя user1 и проверяю, может ли user1 читать логи и описания подов: : 
 
